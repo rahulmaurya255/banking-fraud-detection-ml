@@ -49,6 +49,8 @@ def load_model():
         return model
     except Exception as e:
         st.sidebar.warning(f"HF Hub loading failed: {str(e)[:50]}... Trying local file...")
+
+
     
     # Fallback to local file (for local development)
     local_model_path = 'model/best_model_Recall.pkl'
