@@ -26,24 +26,44 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# Load model with debug
+# Load model with Hugging Face Hub support
 @st.cache_resource
 def load_model():
-    model_path = 'model/best_model_Recall.pkl'
+    """Load model from Hugging Face Hub or local file"""
     
-    # Debug info
-    st.sidebar.write(f"CWD: {os.getcwd()}")
-    st.sidebar.write(f"Model Path: {os.path.abspath(model_path)}")
-    
-    if not os.path.exists(model_path):
-        st.error(f"⚠️ Model file missing at {os.path.abspath(model_path)}")
-        return None
+    # Try loading from Hugging Face Hub first (for cloud deployment)
     try:
+        from huggingface_hub import hf_hub_download
+        
+        # Replace with your HF username/repo when you upload the model
+        # Format: "username/repo-name"
+        HF_REPO = os.environ.get("HF_MODEL_REPO", "rahulmaurya255/fraud-detection-model")
+        
+        model_path = hf_hub_download(
+            repo_id=HF_REPO,
+            filename="best_model_Recall.pkl",
+            repo_type="model"
+        )
         model = joblib.load(model_path)
+        st.sidebar.success("✅ Model loaded from Hugging Face Hub")
+        return model
+    except Exception as e:
+        st.sidebar.warning(f"HF Hub loading failed: {str(e)[:50]}... Trying local file...")
+    
+    # Fallback to local file (for local development)
+    local_model_path = 'model/best_model_Recall.pkl'
+    
+    if not os.path.exists(local_model_path):
+        st.error(f"⚠️ Model file missing at {os.path.abspath(local_model_path)}")
+        st.info("💡 For cloud deployment, upload the model to Hugging Face Hub")
+        return None
+    
+    try:
+        model = joblib.load(local_model_path)
+        st.sidebar.info("✅ Model loaded from local file")
         return model
     except Exception as e:
         st.error(f"⚠️ Error loading model: {e}")
-        # Print detailed error to console
         print(f"Error loading model: {e}")
         return None
 
