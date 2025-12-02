@@ -24,10 +24,9 @@ banking-fraud-detection-ml/
 │   └─ best_model_Recall.pkl
 ├─ .gitignore             <-- Git ignore file
 └─ README.md              <-- Project documentation
-
--- Dateset link
- [Dataset download link](https://www.kaggle.com/datasets/amanalisiddiqui/fraud-detection-dataset?resource=download)
 ```
+
+**Dataset Link:** [Download Dataset](https://www.kaggle.com/datasets/amanalisiddiqui/fraud-detection-dataset?resource=download)
 
 ## Setup Instructions
 
