@@ -4,6 +4,7 @@ import numpy as np
 import joblib
 import os
 
+
 # Set page configuration
 st.set_page_config(
     page_title="FraudGuard AI",
@@ -37,7 +38,7 @@ def load_model():
         
         # Replace with your HF username/repo when you upload the model
         # Format: "username/repo-name"
-        HF_REPO = os.environ.get("HF_MODEL_REPO", "rahulmaurya255/fraud-detection-model")
+        HF_REPO = os.environ.get("HF_MODEL_REPO", "rahulmauryaa/Fraud-detection-model")
         
         model_path = hf_hub_download(
             repo_id=HF_REPO,
