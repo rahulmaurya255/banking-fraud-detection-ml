@@ -13,17 +13,163 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS
+# Custom CSS for a cleaner, more modern look
 st.markdown("""
     <style>
-    .main { background-color: #ffffff; }
-    .stButton>button { width: 100%; background-color: #4CAF50; color: white; font-size: 18px; font-weight: bold; padding: 10px; border-radius: 8px; border: none; }
-    .stButton>button:hover { background-color: #45a049; }
-    .result-card { padding: 20px; border-radius: 10px; text-align: center; margin-top: 20px; box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); }
-    .fraud { background-color: #ffebee; color: #d32f2f; border-left: 10px solid #d32f2f; }
-    .safe { background-color: #e8f5e9; color: #2e7d32; border-left: 10px solid #2e7d32; }
-    h1, h2, h3 { font-family: 'Helvetica Neue', sans-serif; color: #333; }
-    .input-section { background-color: #f9f9f9; padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
+    
+    .main { 
+        background-color: #fafbfc; 
+        font-family: 'DM Sans', sans-serif;
+    }
+    
+    /* Header styling */
+    .app-header {
+        background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%);
+        padding: 2rem;
+        border-radius: 16px;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+    .app-header h1 {
+        color: white;
+        margin: 0;
+        font-size: 2.2rem;
+        font-weight: 700;
+    }
+    .app-header p {
+        color: rgba(255,255,255,0.85);
+        margin: 0.5rem 0 0 0;
+        font-size: 1rem;
+    }
+    
+    /* Button styling */
+    .stButton>button { 
+        width: 100%; 
+        background: linear-gradient(135deg, #2d5a87 0%, #1e3a5f 100%);
+        color: white; 
+        font-size: 16px; 
+        font-weight: 600; 
+        padding: 14px 24px; 
+        border-radius: 12px; 
+        border: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+    }
+    .stButton>button:hover { 
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(30, 58, 95, 0.4);
+    }
+    
+    /* Example buttons */
+    div[data-testid="stHorizontalBlock"] .stButton>button {
+        background: #f0f4f8;
+        color: #1e3a5f;
+        font-size: 13px;
+        padding: 10px 16px;
+        box-shadow: none;
+        border: 1px solid #d0d7de;
+    }
+    div[data-testid="stHorizontalBlock"] .stButton>button:hover {
+        background: #e1e7ed;
+        transform: none;
+        box-shadow: none;
+    }
+    
+    /* Result cards */
+    .result-card { 
+        padding: 28px; 
+        border-radius: 16px; 
+        text-align: center; 
+        margin-top: 24px; 
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+    .fraud { 
+        background: linear-gradient(135deg, #fff5f5 0%, #ffe3e3 100%);
+        border-left: 6px solid #e53e3e;
+    }
+    .fraud h2 { color: #c53030; }
+    .fraud p { color: #742a2a; }
+    
+    .safe { 
+        background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+        border-left: 6px solid #38a169;
+    }
+    .safe h2 { color: #276749; }
+    .safe p { color: #22543d; }
+    
+    /* Section cards */
+    .section-card {
+        background: white;
+        border-radius: 14px;
+        padding: 24px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        border: 1px solid #eaeef2;
+    }
+    .section-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1e3a5f;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    /* Field helper text */
+    .field-helper {
+        font-size: 12px;
+        color: #6b7c93;
+        margin-top: -8px;
+        margin-bottom: 12px;
+    }
+    
+    /* Warning box */
+    .warning-box {
+        background: #fffbeb;
+        border: 1px solid #fbbf24;
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin: 12px 0;
+        font-size: 13px;
+        color: #92400e;
+    }
+    
+    /* Explanation box */
+    .explanation-box {
+        background: #f8fafc;
+        border-radius: 10px;
+        padding: 16px;
+        margin-top: 16px;
+        border: 1px solid #e2e8f0;
+    }
+    .explanation-box h4 {
+        margin: 0 0 8px 0;
+        color: #475569;
+        font-size: 14px;
+    }
+    .explanation-box p {
+        margin: 0;
+        color: #64748b;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+    
+    /* Info expander */
+    .streamlit-expanderHeader {
+        background: #f0f4f8;
+        border-radius: 10px;
+    }
+    
+    /* Hide default streamlit branding */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    
+    /* Improve number input styling */
+    .stNumberInput input {
+        border-radius: 8px;
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -40,8 +186,6 @@ def load_model():
         if not hf_token:
             st.warning("⚠️ HF_TOKEN not found in secrets. Trying to load without authentication...")
         
-        # Replace with your HF username/repo when you upload the model
-        # Format: "username/repo-name"
         HF_REPO = os.environ.get("HF_MODEL_REPO", "rahulmauryaa/Fraud-detection-model")
         
         model_path = hf_hub_download(
@@ -55,58 +199,208 @@ def load_model():
         return model
     except Exception as e:
         st.error(f"❌ Error loading model from Hugging Face: {str(e)}")
-        # Print full traceback to help debugging
         import traceback
         st.code(traceback.format_exc())
         return None
 
 model = load_model()
 
-# Header
-st.title("🛡️ FraudGuard AI")
-st.markdown("### Real-time Transaction Analysis")
-st.markdown("---")
+# ===== HEADER =====
+st.markdown("""
+    <div class="app-header">
+        <h1>🛡️ FraudGuard AI</h1>
+        <p>Instant fraud detection for financial transactions</p>
+    </div>
+""", unsafe_allow_html=True)
 
-# Input Form
+# ===== HOW TO USE EXPANDER =====
+with st.expander("ℹ️ How to use this tool", expanded=False):
+    st.markdown("""
+    **Quick Start:**
+    1. Select the **transaction type** (e.g., CASH_OUT, TRANSFER)
+    2. Enter the **amount** and **account balances** before & after the transaction
+    3. Click **"Check if Fraudulent"** to get instant results
+    
+    **What does the model check?**  
+    This AI analyzes patterns like unusual amounts, balance mismatches, and risky transaction types 
+    to detect potential fraud. It was trained on millions of real transactions.
+    
+    **Not sure what to enter?** Try the example buttons below to see how it works!
+    """)
+
+# ===== EXAMPLE TRANSACTIONS =====
+st.markdown("##### 🧪 Try an Example")
+col_ex1, col_ex2, col_ex3 = st.columns(3)
+
+# Initialize session state for form values
+if 'example_loaded' not in st.session_state:
+    st.session_state.example_loaded = None
+    st.session_state.type_val = 'CASH_OUT'
+    st.session_state.amount = 1000.0
+    st.session_state.step = 1
+    st.session_state.oldbalanceOrg = 5000.0
+    st.session_state.newbalanceOrig = 4000.0
+    st.session_state.oldbalanceDest = 1000.0
+    st.session_state.newbalanceDest = 2000.0
+
+with col_ex1:
+    if st.button("✅ Normal Transaction", use_container_width=True):
+        st.session_state.type_val = 'PAYMENT'
+        st.session_state.amount = 500.0
+        st.session_state.step = 1
+        st.session_state.oldbalanceOrg = 10000.0
+        st.session_state.newbalanceOrig = 9500.0
+        st.session_state.oldbalanceDest = 2000.0
+        st.session_state.newbalanceDest = 2500.0
+        st.session_state.example_loaded = 'normal'
+        st.rerun()
+
+with col_ex2:
+    if st.button("⚠️ Suspicious (CASH_OUT)", use_container_width=True):
+        st.session_state.type_val = 'CASH_OUT'
+        st.session_state.amount = 181000.0
+        st.session_state.step = 1
+        st.session_state.oldbalanceOrg = 181000.0
+        st.session_state.newbalanceOrig = 0.0
+        st.session_state.oldbalanceDest = 0.0
+        st.session_state.newbalanceDest = 0.0
+        st.session_state.example_loaded = 'suspicious_cashout'
+        st.rerun()
+
+with col_ex3:
+    if st.button("🚨 Suspicious (TRANSFER)", use_container_width=True):
+        st.session_state.type_val = 'TRANSFER'
+        st.session_state.amount = 340000.0
+        st.session_state.step = 1
+        st.session_state.oldbalanceOrg = 340000.0
+        st.session_state.newbalanceOrig = 0.0
+        st.session_state.oldbalanceDest = 0.0
+        st.session_state.newbalanceDest = 0.0
+        st.session_state.example_loaded = 'suspicious_transfer'
+        st.rerun()
+
+st.markdown("<br>", unsafe_allow_html=True)
+
+# ===== INPUT FORM =====
 with st.form("prediction_form"):
-    st.subheader("📝 Transaction Details")
+    
+    # ----- Transaction Details Section -----
+    st.markdown('<div class="section-card">', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">💳 Transaction Details</div>', unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("#### General Info")
         type_options = ['CASH_OUT', 'TRANSFER', 'PAYMENT', 'CASH_IN', 'DEBIT']
-        type_val = st.selectbox("Transaction Type", type_options)
-        amount = st.number_input("Amount ($)", min_value=0.0, value=1000.0, step=10.0, format="%.2f")
+        type_val = st.selectbox(
+            "Transaction Type",
+            type_options,
+            index=type_options.index(st.session_state.type_val),
+            help="CASH_OUT & TRANSFER are higher risk transaction types"
+        )
+        st.markdown('<p class="field-helper">How money is being moved (CASH_OUT & TRANSFER are riskier)</p>', unsafe_allow_html=True)
     
     with col2:
-        st.markdown("## Time Step")
-        step = st.number_input("Seconds since start", min_value=1, value=1, help="Time step of the transaction")
-
-    st.markdown("---")
+        amount = st.number_input(
+            "Transaction Amount ($)", 
+            min_value=0.0, 
+            max_value=10000000.0,
+            value=st.session_state.amount, 
+            step=100.0, 
+            format="%.2f",
+            help="The amount being transferred in this transaction"
+        )
+        st.markdown('<p class="field-helper">Typical range: $100 - $50,000 for personal transactions</p>', unsafe_allow_html=True)
     
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    # ----- Sender & Receiver Section -----
     col3, col4 = st.columns(2)
     
     with col3:
-        st.markdown('<div class="input-section">', unsafe_allow_html=True)
-        st.markdown("#### 📤 Sender (Origin)")
-        oldbalanceOrg = st.number_input("Initial Balance ($)", min_value=0.0, value=1000.0, key="org_old")
-        newbalanceOrig = st.number_input("New Balance ($)", min_value=0.0, value=0.0, key="org_new")
+        st.markdown('<div class="section-card">', unsafe_allow_html=True)
+        st.markdown('<div class="section-title">📤 Sender Account</div>', unsafe_allow_html=True)
+        
+        oldbalanceOrg = st.number_input(
+            "Balance Before Transaction ($)", 
+            min_value=0.0, 
+            max_value=50000000.0,
+            value=st.session_state.oldbalanceOrg, 
+            step=100.0,
+            format="%.2f",
+            key="org_old"
+        )
+        st.markdown('<p class="field-helper">How much the sender had before this transaction</p>', unsafe_allow_html=True)
+        
+        newbalanceOrig = st.number_input(
+            "Balance After Transaction ($)", 
+            min_value=0.0, 
+            max_value=50000000.0,
+            value=st.session_state.newbalanceOrig, 
+            step=100.0,
+            format="%.2f",
+            key="org_new"
+        )
+        st.markdown('<p class="field-helper">Should typically be: Balance Before − Amount</p>', unsafe_allow_html=True)
+        
         st.markdown('</div>', unsafe_allow_html=True)
 
     with col4:
-        st.markdown('<div class="input-section">', unsafe_allow_html=True)
-        st.markdown("#### 📥 Receiver (Dest)")
-        oldbalanceDest = st.number_input("Initial Balance ($)", min_value=0.0, value=0.0, key="dest_old")
-        newbalanceDest = st.number_input("New Balance ($)", min_value=0.0, value=0.0, key="dest_new")
+        st.markdown('<div class="section-card">', unsafe_allow_html=True)
+        st.markdown('<div class="section-title">📥 Receiver Account</div>', unsafe_allow_html=True)
+        
+        oldbalanceDest = st.number_input(
+            "Balance Before Transaction ($)", 
+            min_value=0.0, 
+            max_value=50000000.0,
+            value=st.session_state.oldbalanceDest, 
+            step=100.0,
+            format="%.2f",
+            key="dest_old"
+        )
+        st.markdown('<p class="field-helper">How much the receiver had before this transaction</p>', unsafe_allow_html=True)
+        
+        newbalanceDest = st.number_input(
+            "Balance After Transaction ($)", 
+            min_value=0.0, 
+            max_value=50000000.0,
+            value=st.session_state.newbalanceDest, 
+            step=100.0,
+            format="%.2f",
+            key="dest_new"
+        )
+        st.markdown('<p class="field-helper">Should typically be: Balance Before + Amount</p>', unsafe_allow_html=True)
+        
         st.markdown('</div>', unsafe_allow_html=True)
+    
+    # ----- Input Validation Warnings -----
+    warnings = []
+    
+    if amount > oldbalanceOrg and type_val in ['CASH_OUT', 'TRANSFER', 'PAYMENT']:
+        warnings.append("⚠️ Transaction amount exceeds sender's available balance")
+    
+    if type_val in ['CASH_OUT', 'TRANSFER'] and oldbalanceOrg > 0 and newbalanceOrig == 0 and amount == oldbalanceOrg:
+        warnings.append("⚠️ This empties the sender's entire account — a common fraud pattern")
+    
+    if type_val in ['TRANSFER', 'CASH_OUT'] and oldbalanceDest == 0 and newbalanceDest == 0:
+        warnings.append("⚠️ Receiver has zero balance before & after — suspicious for TRANSFER/CASH_OUT")
+    
+    expected_sender_balance = oldbalanceOrg - amount
+    if abs(newbalanceOrig - expected_sender_balance) > 0.01 and expected_sender_balance >= 0:
+        warnings.append(f"⚠️ Sender's new balance doesn't match: expected ${expected_sender_balance:,.2f}")
+    
+    if warnings:
+        st.markdown('<div class="warning-box">' + '<br>'.join(warnings) + '</div>', unsafe_allow_html=True)
+    
+    # Hidden fields
+    step = st.session_state.step
+    isFlaggedFraud = 0
 
-    # Hidden/Default Inputs
-    isFlaggedFraud = 0 
+    # Submit button
+    st.markdown("<br>", unsafe_allow_html=True)
+    submit_btn = st.form_submit_button("🔍 Check if Fraudulent", use_container_width=True)
 
-    submit_btn = st.form_submit_button("🔍 Analyze Transaction")
-
-# Prediction Logic
+# ===== PREDICTION LOGIC =====
 if submit_btn:
     if model:
         # Preprocessing
@@ -133,20 +427,61 @@ if submit_btn:
             else:
                 proba = 1.0 if prediction == 1 else 0.0
 
+            # Generate explanation based on transaction features
+            explanations = []
+            
+            if type_val in ['TRANSFER', 'CASH_OUT'] and amount > 100000:
+                explanations.append(f"Large {type_val} of ${amount:,.0f}")
+            
+            if oldbalanceOrg > 0 and newbalanceOrig == 0:
+                explanations.append("Account fully emptied")
+            
+            if type_val in ['TRANSFER', 'CASH_OUT'] and oldbalanceDest == 0:
+                explanations.append("Receiver had zero balance")
+            
+            if amount > oldbalanceOrg:
+                explanations.append("Amount exceeds available balance")
+            
+            if type_val == 'TRANSFER' and newbalanceDest == 0 and amount > 0:
+                explanations.append("Transfer didn't increase receiver balance")
+            
+            if not explanations:
+                if prediction == 1:
+                    explanations.append("Pattern matches known fraud indicators")
+                else:
+                    explanations.append("Transaction follows normal patterns")
+
+            # Display results
             if prediction == 1:
                 st.markdown(f"""
                     <div class="result-card fraud">
-                        <h2>🚨 High Risk Transaction Detected</h2>
-                        <p style="font-size: 20px;">Fraud Probability: <strong>{proba:.1%}</strong></p>
-                        <p>Action Recommended: <strong>Block & Review</strong></p>
+                        <h2>🚨 High Risk — Likely Fraudulent</h2>
+                        <p style="font-size: 22px; margin: 16px 0;">
+                            Fraud Probability: <strong>{proba:.1%}</strong>
+                        </p>
+                        <p style="font-size: 15px; opacity: 0.9;">
+                            Recommended Action: <strong>Block & Review Manually</strong>
+                        </p>
+                    </div>
+                    <div class="explanation-box">
+                        <h4>💡 Why this might be fraud:</h4>
+                        <p>{' • '.join(explanations)}</p>
                     </div>
                 """, unsafe_allow_html=True)
             else:
                 st.markdown(f"""
                     <div class="result-card safe">
-                        <h2>✅ Transaction Appears Safe</h2>
-                        <p style="font-size: 20px;">Fraud Probability: <strong>{proba:.1%}</strong></p>
-                        <p>Action Recommended: <strong>Process</strong></p>
+                        <h2>✅ Low Risk — Appears Legitimate</h2>
+                        <p style="font-size: 22px; margin: 16px 0;">
+                            Fraud Probability: <strong>{proba:.1%}</strong>
+                        </p>
+                        <p style="font-size: 15px; opacity: 0.9;">
+                            Recommended Action: <strong>Safe to Process</strong>
+                        </p>
+                    </div>
+                    <div class="explanation-box">
+                        <h4>💡 Analysis summary:</h4>
+                        <p>{' • '.join(explanations)}</p>
                     </div>
                 """, unsafe_allow_html=True)
                 
@@ -154,3 +489,11 @@ if submit_btn:
             st.error(f"An error occurred during analysis: {e}")
     else:
         st.error("Model is not loaded. Please restart the application.")
+
+# ===== FOOTER =====
+st.markdown("<br><br>", unsafe_allow_html=True)
+st.markdown("""
+    <div style="text-align: center; color: #94a3b8; font-size: 12px; padding: 20px;">
+        Built with ML • Trained on 6M+ transactions • Balanced Random Forest Model
+    </div>
+""", unsafe_allow_html=True)
