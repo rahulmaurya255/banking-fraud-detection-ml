@@ -30,11 +30,15 @@ st.markdown("""
 # Load model with Hugging Face Hub support
 @st.cache_resource
 def load_model():
-    """Load model from Hugging Face Hub or local file"""
-    
-    # Try loading from Hugging Face Hub first (for cloud deployment)
+    """Load model from Hugging Face Hub"""
     try:
         from huggingface_hub import hf_hub_download
+        
+        # Get token from secrets or env
+        hf_token = st.secrets.get("HF_TOKEN") or os.environ.get("HF_TOKEN")
+        
+        if not hf_token:
+            st.warning("⚠️ HF_TOKEN not found in secrets. Trying to load without authentication...")
         
         # Replace with your HF username/repo when you upload the model
         # Format: "username/repo-name"
@@ -43,31 +47,17 @@ def load_model():
         model_path = hf_hub_download(
             repo_id=HF_REPO,
             filename="best_model_Recall.pkl",
-            repo_type="model"
+            repo_type="model",
+            token=hf_token
         )
         model = joblib.load(model_path)
         st.sidebar.success("✅ Model loaded from Hugging Face Hub")
         return model
     except Exception as e:
-        st.sidebar.warning(f"HF Hub loading failed: {str(e)[:50]}... Trying local file...")
-
-
-    
-    # Fallback to local file (for local development)
-    local_model_path = 'model/best_model_Recall.pkl'
-    
-    if not os.path.exists(local_model_path):
-        st.error(f"⚠️ Model file missing at {os.path.abspath(local_model_path)}")
-        st.info("💡 For cloud deployment, upload the model to Hugging Face Hub")
-        return None
-    
-    try:
-        model = joblib.load(local_model_path)
-        st.sidebar.info("✅ Model loaded from local file")
-        return model
-    except Exception as e:
-        st.error(f"⚠️ Error loading model: {e}")
-        print(f"Error loading model: {e}")
+        st.error(f"❌ Error loading model from Hugging Face: {str(e)}")
+        # Print full traceback to help debugging
+        import traceback
+        st.code(traceback.format_exc())
         return None
 
 model = load_model()
