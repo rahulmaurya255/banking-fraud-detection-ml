@@ -331,26 +331,7 @@ with st.form("prediction_form"):
             key="dest_new"
         )
     
-    # ----- Input Validation Warnings -----
-    warning_messages = []
     
-    if amount > oldbalanceOrg and type_val in ['CASH_OUT', 'TRANSFER', 'PAYMENT']:
-        warning_messages.append("Transaction amount exceeds sender's available balance")
-    
-    if type_val in ['CASH_OUT', 'TRANSFER'] and oldbalanceOrg > 0 and newbalanceOrig == 0 and amount == oldbalanceOrg:
-        warning_messages.append("This empties the sender's entire account — a common fraud pattern")
-    
-    if type_val in ['TRANSFER', 'CASH_OUT'] and oldbalanceDest == 0 and newbalanceDest == 0:
-        warning_messages.append("Receiver has zero balance before & after — suspicious for TRANSFER/CASH_OUT")
-    
-    expected_sender_balance = oldbalanceOrg - amount
-    if abs(newbalanceOrig - expected_sender_balance) > 0.01 and expected_sender_balance >= 0:
-        warning_messages.append(f"Sender's new balance doesn't match: expected ${expected_sender_balance:,.2f}")
-    
-    if warning_messages:
-        st.warning("**Potential Issues Detected:**\n" + "\n".join([f"• {msg}" for msg in warning_messages]))
-    
-    # Hidden fields
     step = st.session_state.step
     isFlaggedFraud = 0
 
