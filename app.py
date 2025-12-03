@@ -63,17 +63,26 @@ st.markdown("""
     
     /* Example buttons */
     div[data-testid="stHorizontalBlock"] .stButton>button {
-        background: #f0f4f8;
+        background: #ffffff;
         color: #1e3a5f;
-        font-size: 13px;
-        padding: 10px 16px;
-        box-shadow: none;
-        border: 1px solid #d0d7de;
+        font-size: 14px;
+        padding: 12px 16px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        border: 2px solid #d0d7de;
+        font-weight: 500;
     }
     div[data-testid="stHorizontalBlock"] .stButton>button:hover {
-        background: #e1e7ed;
+        background: #f0f4f8;
+        border-color: #2d5a87;
         transform: none;
-        box-shadow: none;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    div[data-testid="stHorizontalBlock"] .stButton>button:active,
+    div[data-testid="stHorizontalBlock"] .stButton>button:focus {
+        background: #2d5a87 !important;
+        color: white !important;
+        border-color: #1e3a5f !important;
+        box-shadow: 0 0 0 3px rgba(45, 90, 135, 0.3) !important;
     }
     
     /* Result cards */
@@ -211,7 +220,7 @@ with st.expander("ℹ️ How to use this tool", expanded=False):
 
 # ===== EXAMPLE TRANSACTIONS =====
 st.markdown("##### Try an Example")
-col_ex1, col_ex2, col_ex3 = st.columns(3)
+col_ex1, col_ex2 = st.columns(2)
 
 # Initialize session state for form values
 if 'example_loaded' not in st.session_state:
@@ -225,7 +234,7 @@ if 'example_loaded' not in st.session_state:
     st.session_state.newbalanceDest = 2000.0
 
 with col_ex1:
-    if st.button("Normal Transaction", use_container_width=True):
+    if st.button("✅ Normal Transaction", use_container_width=True, key="btn_normal"):
         st.session_state.type_val = 'PAYMENT'
         st.session_state.amount = 500.0
         st.session_state.step = 1
@@ -237,17 +246,23 @@ with col_ex1:
         st.rerun()
 
 with col_ex2:
-    if st.button("Suspicious/fraudulent", use_container_width=True):
-        st.session_state.type_val = 'CASH_OUT'
+    if st.button("🚨 Suspicious/Fraud", use_container_width=True, key="btn_fraud"):
+        st.session_state.type_val = 'TRANSFER'
         st.session_state.amount = 181000.0
         st.session_state.step = 1
         st.session_state.oldbalanceOrg = 181000.0
         st.session_state.newbalanceOrig = 0.0
         st.session_state.oldbalanceDest = 0.0
         st.session_state.newbalanceDest = 0.0
-        st.session_state.example_loaded = 'suspicious_cashout'
+        st.session_state.example_loaded = 'suspicious'
         st.rerun()
 
+# Show which example is loaded
+if st.session_state.example_loaded:
+    if st.session_state.example_loaded == 'normal':
+        st.success("✅ **Normal transaction example loaded** - This should be detected as SAFE")
+    else:
+        st.info("🚨 **Suspicious transaction example loaded** - This should be detected as FRAUD (full balance transfer to zero-balance account)")
 
 st.write("")  # Spacing
 
@@ -358,13 +373,16 @@ if submit_btn:
         })
 
         try:
-            # Get prediction
-            prediction = model.predict(input_df)[0]
-            
+            # Get prediction probabilities
             if hasattr(model, "predict_proba"):
-                proba = model.predict_proba(input_df)[0][1]
+                proba = model.predict_proba(input_df)[0][1]  # Probability of fraud
             else:
-                proba = 1.0 if prediction == 1 else 0.0
+                raw_pred = model.predict(input_df)[0]
+                proba = 1.0 if raw_pred == 1 else 0.0
+            
+            # Use lower threshold for fraud detection (more sensitive)
+            FRAUD_THRESHOLD = 0.3
+            prediction = 1 if proba >= FRAUD_THRESHOLD else 0
 
             # Generate explanation based on transaction features
             explanations = []
