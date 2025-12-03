@@ -98,42 +98,23 @@ st.markdown("""
     .safe h2 { color: #276749; }
     .safe p { color: #22543d; }
     
-    /* Section cards */
-    .section-card {
-        background: white;
-        border-radius: 14px;
-        padding: 24px;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        border: 1px solid #eaeef2;
-    }
-    .section-title {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #1e3a5f;
-        margin-bottom: 16px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
+    /* Section headers */
+    h4 {
+        color: #1e3a5f !important;
+        font-weight: 600 !important;
+        margin-bottom: 1rem !important;
     }
     
-    /* Field helper text */
-    .field-helper {
-        font-size: 12px;
-        color: #6b7c93;
-        margin-top: -8px;
-        margin-bottom: 12px;
+    /* Captions styling */
+    .stCaption {
+        color: #6b7c93 !important;
+        margin-top: -0.5rem !important;
     }
     
-    /* Warning box */
-    .warning-box {
-        background: #fffbeb;
-        border: 1px solid #fbbf24;
-        border-radius: 8px;
-        padding: 12px 16px;
-        margin: 12px 0;
-        font-size: 13px;
-        color: #92400e;
+    /* Divider styling */
+    hr {
+        margin: 1.5rem 0 !important;
+        border-color: #e2e8f0 !important;
     }
     
     /* Explanation box */
@@ -229,7 +210,7 @@ with st.expander("ℹ️ How to use this tool", expanded=False):
     """)
 
 # ===== EXAMPLE TRANSACTIONS =====
-st.markdown("##### 🧪 Try an Example")
+st.markdown("##### Try an Example")
 col_ex1, col_ex2, col_ex3 = st.columns(3)
 
 # Initialize session state for form values
@@ -244,7 +225,7 @@ if 'example_loaded' not in st.session_state:
     st.session_state.newbalanceDest = 2000.0
 
 with col_ex1:
-    if st.button("✅ Normal Transaction", use_container_width=True):
+    if st.button("Normal Transaction", use_container_width=True):
         st.session_state.type_val = 'PAYMENT'
         st.session_state.amount = 500.0
         st.session_state.step = 1
@@ -256,7 +237,7 @@ with col_ex1:
         st.rerun()
 
 with col_ex2:
-    if st.button("⚠️ Suspicious (CASH_OUT)", use_container_width=True):
+    if st.button("Suspicious/fraudulent", use_container_width=True):
         st.session_state.type_val = 'CASH_OUT'
         st.session_state.amount = 181000.0
         st.session_state.step = 1
@@ -267,26 +248,14 @@ with col_ex2:
         st.session_state.example_loaded = 'suspicious_cashout'
         st.rerun()
 
-with col_ex3:
-    if st.button("🚨 Suspicious (TRANSFER)", use_container_width=True):
-        st.session_state.type_val = 'TRANSFER'
-        st.session_state.amount = 340000.0
-        st.session_state.step = 1
-        st.session_state.oldbalanceOrg = 340000.0
-        st.session_state.newbalanceOrig = 0.0
-        st.session_state.oldbalanceDest = 0.0
-        st.session_state.newbalanceDest = 0.0
-        st.session_state.example_loaded = 'suspicious_transfer'
-        st.rerun()
 
-st.markdown("<br>", unsafe_allow_html=True)
+st.write("")  # Spacing
 
 # ===== INPUT FORM =====
 with st.form("prediction_form"):
     
     # ----- Transaction Details Section -----
-    st.markdown('<div class="section-card">', unsafe_allow_html=True)
-    st.markdown('<div class="section-title">💳 Transaction Details</div>', unsafe_allow_html=True)
+    st.markdown("#### 💳 Transaction Details")
     
     col1, col2 = st.columns(2)
     
@@ -296,9 +265,9 @@ with st.form("prediction_form"):
             "Transaction Type",
             type_options,
             index=type_options.index(st.session_state.type_val),
-            help="CASH_OUT & TRANSFER are higher risk transaction types"
+            help="type of transaction"
         )
-        st.markdown('<p class="field-helper">How money is being moved (CASH_OUT & TRANSFER are riskier)</p>', unsafe_allow_html=True)
+        st.caption("How money is being moved ")
     
     with col2:
         amount = st.number_input(
@@ -310,19 +279,18 @@ with st.form("prediction_form"):
             format="%.2f",
             help="The amount being transferred in this transaction"
         )
-        st.markdown('<p class="field-helper">Typical range: $100 - $50,000 for personal transactions</p>', unsafe_allow_html=True)
+        st.caption("Typical range: 100 - 50,000")
     
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.divider()
     
     # ----- Sender & Receiver Section -----
     col3, col4 = st.columns(2)
     
     with col3:
-        st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        st.markdown('<div class="section-title">📤 Sender Account</div>', unsafe_allow_html=True)
+        st.markdown("##### Sender's Account")
         
         oldbalanceOrg = st.number_input(
-            "Balance Before Transaction ($)", 
+            "Sender's Balance Before Transaction ($)", 
             min_value=0.0, 
             max_value=50000000.0,
             value=st.session_state.oldbalanceOrg, 
@@ -330,7 +298,6 @@ with st.form("prediction_form"):
             format="%.2f",
             key="org_old"
         )
-        st.markdown('<p class="field-helper">How much the sender had before this transaction</p>', unsafe_allow_html=True)
         
         newbalanceOrig = st.number_input(
             "Balance After Transaction ($)", 
@@ -341,25 +308,19 @@ with st.form("prediction_form"):
             format="%.2f",
             key="org_new"
         )
-        st.markdown('<p class="field-helper">Should typically be: Balance Before − Amount</p>', unsafe_allow_html=True)
-        
-        st.markdown('</div>', unsafe_allow_html=True)
 
     with col4:
-        st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        st.markdown('<div class="section-title">📥 Receiver Account</div>', unsafe_allow_html=True)
+        st.markdown("##### Receiver Account")
         
         oldbalanceDest = st.number_input(
-            "Balance Before Transaction ($)", 
+            "Receiver's Balance Before Transaction ($)", 
             min_value=0.0, 
             max_value=50000000.0,
             value=st.session_state.oldbalanceDest, 
             step=100.0,
             format="%.2f",
             key="dest_old"
-        )
-        st.markdown('<p class="field-helper">How much the receiver had before this transaction</p>', unsafe_allow_html=True)
-        
+        )        
         newbalanceDest = st.number_input(
             "Balance After Transaction ($)", 
             min_value=0.0, 
@@ -369,35 +330,32 @@ with st.form("prediction_form"):
             format="%.2f",
             key="dest_new"
         )
-        st.markdown('<p class="field-helper">Should typically be: Balance Before + Amount</p>', unsafe_allow_html=True)
-        
-        st.markdown('</div>', unsafe_allow_html=True)
     
     # ----- Input Validation Warnings -----
-    warnings = []
+    warning_messages = []
     
     if amount > oldbalanceOrg and type_val in ['CASH_OUT', 'TRANSFER', 'PAYMENT']:
-        warnings.append("⚠️ Transaction amount exceeds sender's available balance")
+        warning_messages.append("Transaction amount exceeds sender's available balance")
     
     if type_val in ['CASH_OUT', 'TRANSFER'] and oldbalanceOrg > 0 and newbalanceOrig == 0 and amount == oldbalanceOrg:
-        warnings.append("⚠️ This empties the sender's entire account — a common fraud pattern")
+        warning_messages.append("This empties the sender's entire account — a common fraud pattern")
     
     if type_val in ['TRANSFER', 'CASH_OUT'] and oldbalanceDest == 0 and newbalanceDest == 0:
-        warnings.append("⚠️ Receiver has zero balance before & after — suspicious for TRANSFER/CASH_OUT")
+        warning_messages.append("Receiver has zero balance before & after — suspicious for TRANSFER/CASH_OUT")
     
     expected_sender_balance = oldbalanceOrg - amount
     if abs(newbalanceOrig - expected_sender_balance) > 0.01 and expected_sender_balance >= 0:
-        warnings.append(f"⚠️ Sender's new balance doesn't match: expected ${expected_sender_balance:,.2f}")
+        warning_messages.append(f"Sender's new balance doesn't match: expected ${expected_sender_balance:,.2f}")
     
-    if warnings:
-        st.markdown('<div class="warning-box">' + '<br>'.join(warnings) + '</div>', unsafe_allow_html=True)
+    if warning_messages:
+        st.warning("**Potential Issues Detected:**\n" + "\n".join([f"• {msg}" for msg in warning_messages]))
     
     # Hidden fields
     step = st.session_state.step
     isFlaggedFraud = 0
 
     # Submit button
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.write("")  # Spacing
     submit_btn = st.form_submit_button("🔍 Check if Fraudulent", use_container_width=True)
 
 # ===== PREDICTION LOGIC =====
@@ -491,9 +449,6 @@ if submit_btn:
         st.error("Model is not loaded. Please restart the application.")
 
 # ===== FOOTER =====
-st.markdown("<br><br>", unsafe_allow_html=True)
-st.markdown("""
-    <div style="text-align: center; color: #94a3b8; font-size: 12px; padding: 20px;">
-        Built with ML • Trained on 6M+ transactions • Balanced Random Forest Model
-    </div>
-""", unsafe_allow_html=True)
+st.write("")
+st.write("")
+st.caption("Built with ML • Trained on 6M+ transactions • Balanced Random Forest Model")
