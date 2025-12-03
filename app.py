@@ -222,27 +222,25 @@ with st.expander("ℹ️ How to use this tool", expanded=False):
 st.markdown("##### Try an Example")
 col_ex1, col_ex2 = st.columns(2)
 
-# Initialize session state for form values
-if 'example_loaded' not in st.session_state:
-    st.session_state.example_loaded = None
+# Initialize session state for form values (using widget keys directly)
+if 'org_old' not in st.session_state:
     st.session_state.type_val = 'CASH_OUT'
     st.session_state.amount = 1000.0
     st.session_state.step = 1
-    st.session_state.oldbalanceOrg = 5000.0
-    st.session_state.newbalanceOrig = 4000.0
-    st.session_state.oldbalanceDest = 1000.0
-    st.session_state.newbalanceDest = 2000.0
+    st.session_state.org_old = 5000.0
+    st.session_state.org_new = 4000.0
+    st.session_state.dest_old = 1000.0
+    st.session_state.dest_new = 2000.0
 
 with col_ex1:
     if st.button("✅ Normal Transaction", use_container_width=True, key="btn_normal"):
         st.session_state.type_val = 'PAYMENT'
         st.session_state.amount = 500.0
         st.session_state.step = 1
-        st.session_state.oldbalanceOrg = 10000.0
-        st.session_state.newbalanceOrig = 9500.0
-        st.session_state.oldbalanceDest = 2000.0
-        st.session_state.newbalanceDest = 2500.0
-        st.session_state.example_loaded = 'normal'
+        st.session_state.org_old = 10000.0
+        st.session_state.org_new = 9500.0
+        st.session_state.dest_old = 2000.0
+        st.session_state.dest_new = 2500.0
         st.rerun()
 
 with col_ex2:
@@ -250,11 +248,10 @@ with col_ex2:
         st.session_state.type_val = 'TRANSFER'
         st.session_state.amount = 1810000.0
         st.session_state.step = 1
-        st.session_state.oldbalanceOrg = 5000000.0
-        st.session_state.newbalanceOrig = 0.0
-        st.session_state.oldbalanceDest = 1000.0
-        st.session_state.newbalanceDest = 2000.0
-        st.session_state.example_loaded = 'suspicious'
+        st.session_state.org_old = 5000000.0
+        st.session_state.org_new = 0.0
+        st.session_state.dest_old = 1000.0
+        st.session_state.dest_new = 2000000.0
         st.rerun()
 
 st.write("")  # Spacing
@@ -301,7 +298,6 @@ with st.form("prediction_form"):
             "Sender's Balance Before Transaction ($)", 
             min_value=0.0, 
             max_value=50000000.0,
-            value=st.session_state.oldbalanceOrg, 
             step=100.0,
             format="%.2f",
             key="org_old"
@@ -311,7 +307,6 @@ with st.form("prediction_form"):
             "Balance After Transaction ($)", 
             min_value=0.0, 
             max_value=50000000.0,
-            value=st.session_state.newbalanceOrig, 
             step=100.0,
             format="%.2f",
             key="org_new"
@@ -324,7 +319,6 @@ with st.form("prediction_form"):
             "Receiver's Balance Before Transaction ($)", 
             min_value=0.0, 
             max_value=50000000.0,
-            value=st.session_state.oldbalanceDest, 
             step=100.0,
             format="%.2f",
             key="dest_old"
@@ -333,7 +327,6 @@ with st.form("prediction_form"):
             "Balance After Transaction ($)", 
             min_value=0.0, 
             max_value=50000000.0,
-            value=st.session_state.newbalanceDest, 
             step=100.0,
             format="%.2f",
             key="dest_new"
@@ -373,8 +366,8 @@ if submit_btn:
                 raw_pred = model.predict(input_df)[0]
                 proba = 1.0 if raw_pred == 1 else 0.0
             
-            # Use lower threshold for fraud detection (more sensitive)
-            FRAUD_THRESHOLD = 0.3
+            # Use 50% threshold for fraud detection
+            FRAUD_THRESHOLD = 0.5
             prediction = 1 if proba >= FRAUD_THRESHOLD else 0
 
             # Generate explanation based on transaction features
@@ -406,10 +399,7 @@ if submit_btn:
                 st.markdown(f"""
                     <div class="result-card fraud">
                         <h2>🚨 High Risk — Likely Fraudulent</h2>
-                        <p style="font-size: 22px; margin: 16px 0;">
-                            Fraud Probability: <strong>{proba:.1%}</strong>
-                        </p>
-                        <p style="font-size: 15px; opacity: 0.9;">
+                        <p style="font-size: 16px; margin: 16px 0;">
                             Recommended Action: <strong>Block & Review Manually</strong>
                         </p>
                     </div>
@@ -422,10 +412,7 @@ if submit_btn:
                 st.markdown(f"""
                     <div class="result-card safe">
                         <h2>✅ Low Risk — Appears Legitimate</h2>
-                        <p style="font-size: 22px; margin: 16px 0;">
-                            Fraud Probability: <strong>{proba:.1%}</strong>
-                        </p>
-                        <p style="font-size: 15px; opacity: 0.9;">
+                        <p style="font-size: 16px; margin: 16px 0;">
                             Recommended Action: <strong>Safe to Process</strong>
                         </p>
                     </div>
