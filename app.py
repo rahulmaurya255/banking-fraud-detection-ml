@@ -248,21 +248,14 @@ with col_ex1:
 with col_ex2:
     if st.button("🚨 Suspicious/Fraud", use_container_width=True, key="btn_fraud"):
         st.session_state.type_val = 'TRANSFER'
-        st.session_state.amount = 181000.0
+        st.session_state.amount = 1810000.0
         st.session_state.step = 1
-        st.session_state.oldbalanceOrg = 181000.0
+        st.session_state.oldbalanceOrg = 5000000.0
         st.session_state.newbalanceOrig = 0.0
-        st.session_state.oldbalanceDest = 0.0
-        st.session_state.newbalanceDest = 0.0
+        st.session_state.oldbalanceDest = 1000.0
+        st.session_state.newbalanceDest = 2000.0
         st.session_state.example_loaded = 'suspicious'
         st.rerun()
-
-# Show which example is loaded
-if st.session_state.example_loaded:
-    if st.session_state.example_loaded == 'normal':
-        st.success("✅ **Normal transaction example loaded** - This should be detected as SAFE")
-    else:
-        st.info("🚨 **Suspicious transaction example loaded** - This should be detected as FRAUD (full balance transfer to zero-balance account)")
 
 st.write("")  # Spacing
 
