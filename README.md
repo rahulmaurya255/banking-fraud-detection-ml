@@ -28,6 +28,8 @@ banking-fraud-detection-ml/
 
 **Dataset Link:** [Download Dataset](https://www.kaggle.com/datasets/amanalisiddiqui/fraud-detection-dataset?resource=download)
 
+**Try the deployed model now:** [Click Here](https://banking-fraud-detection-ml.streamlit.app/)
+
 ## Setup Instructions
 
 1.  **Clone the repository** 
